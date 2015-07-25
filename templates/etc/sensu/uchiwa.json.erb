@@ -1,7 +1,7 @@
 {
 "sensu": [
   <%- default_endpoint = scope['uchiwa::params::sensu_api_endpoints'][0] -%>
-  <%- @sensu_api_endpoints.each_with_index do |endpoint, i| -%>
+  <%- scope.lookupvar('uchiwa::sensu_api_endpoints').each_with_index do |endpoint, i| -%>
     {
       "name": "<%= endpoint['name'] || default_endpoint['name'] %>",
       "host": "<%= endpoint['host'] || default_endpoint['host'] %>",
@@ -16,10 +16,10 @@
     <%- end -%>
   ],
   "uchiwa": {
-    "host": "<%= @host %>",
-    "port": <%= @port %>,
-    "user": "<%= @user %>",
-    "pass": "<%= @pass %>",
-    "refresh": <%= @refresh %>
+    "host": "<%= scope.lookupvar('uchiwa::host') %>",
+    "port": <%= scope.lookupvar('uchiwa::port') %>,
+    "user": "<%= scope.lookupvar('uchiwa::user') %>",
+    "pass": "<%= scope.lookupvar('uchiwa::pass') %>",
+    "refresh": <%= scope.lookupvar('uchiwa::refresh') %>
   }
 }
