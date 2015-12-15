@@ -20,6 +20,25 @@
     "port": <%= scope.lookupvar('uchiwa::port') %>,
     "user": "<%= scope.lookupvar('uchiwa::user') %>",
     "pass": "<%= scope.lookupvar('uchiwa::pass') %>",
-    "refresh": <%= scope.lookupvar('uchiwa::refresh') %>
+    "refresh": <%= scope.lookupvar('uchiwa::refresh') %><%= ',' if scope.lookupvar('uchiwa::users').size > 0 or scope.lookupvar('uchiwa::auth').size == 2 %>
+    <%- if scope.lookupvar('uchiwa::users').size > 0 -%>
+    "users": [
+    <%- scope.lookupvar('uchiwa::users').each_with_index do |user, i| -%>
+      {
+        "username": "<%= user['username'] %>",
+        "password": "<%= user['password'] %>",
+        "role": {
+          "readonly": <%= user['readonly'] %>
+        }
+      }<%= ',' if i < (scope.lookupvar('uchiwa::users').size - 1) %>
+    <%- end -%>
+    ]<%= ',' if scope.lookupvar('uchiwa::auth').size == 2 %>
+  <%- end -%>
+  <%- if scope.lookupvar('uchiwa::auth').size == 2 -%>
+    "auth": {
+      "publickey": "<%= scope.lookupvar('uchiwa::auth')['publickey']  %>",
+      "privatekey": "<%= scope.lookupvar('uchiwa::auth')['privatekey']  %>"
+    }
+  <%- end -%>
   }
 }

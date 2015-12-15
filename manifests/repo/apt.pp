@@ -19,18 +19,23 @@ class uchiwa::repo::apt {
       if $uchiwa::repo_source {
         $url = $uchiwa::repo_source
       } else {
-        $url = 'http://repos.sensuapp.org/apt'
+        $url = 'http://repositories.sensuapp.org/apt'
       }
 
       apt::source { 'sensu':
-        ensure      => $ensure,
-        location    => $url,
-        release     => 'sensu',
-        repos       => $uchiwa::repo,
-        include_src => false,
-        key         => $uchiwa::repo_key_id,
-        key_source  => $uchiwa::repo_key_source,
-        before      => Package['uchiwa'],
+        ensure   => $ensure,
+        before   => Package['uchiwa'],
+        include  => {
+          'src' => false,
+          'deb' => true,
+        },
+        key      => {
+          'id'     => $uchiwa::repo_key_id,
+          'source' => $uchiwa::repo_key_source,
+        },
+        location => $url,
+        release  => 'sensu',
+        repos    => $uchiwa::repo,
       }
 
     } else {
